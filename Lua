@@ -1,0 +1,55 @@
+-- 1. Get raw script content
+local rawUrl = "https://raw.githubusercontent.com/boniloyzin-cloud/Yessssssss/refs/heads/main/raw%20(3).txt"
+local success, scriptContent = pcall(function()
+    return game:HttpGet(rawUrl)
+end)
+
+if success and scriptContent then
+    -- 2. Direct string replacement on source code to rename UI elements
+    local modifiedScript = scriptContent
+        :gsub("7S Hub", "DAVI PREMIUM SCRIPT")
+        :gsub("7S", "DAVI PREMIUM SCRIPT")
+        :gsub("Pallet Hub", "DAVI PREMIUM SCRIPT")
+        :gsub("FTAP", "DAVI PREMIUM SCRIPT")
+
+    -- 3. Execute modified script
+    local executeFunc, err = loadstring(modifiedScript)
+    if executeFunc then
+        executeFunc()
+    else
+        loadstring(scriptContent)()
+    end
+else
+    warn("Failed to fetch script from URL")
+end
+
+-- 4. Create transparent "SCRIPT MAKE BY DAVI" text overlay (no background)
+task.spawn(function()
+    local CoreGui = game:GetService("CoreGui")
+    local Players = game:GetService("Players")
+    local LocalPlayer = Players.LocalPlayer
+
+    -- Remove existing overlay if re-executed
+    local targetParent = CoreGui:FindFirstChild("RobloxGui") or LocalPlayer:FindFirstChild("PlayerGui") or CoreGui
+    if targetParent:FindFirstChild("DaviWatermarkGui") then
+        targetParent.DaviWatermarkGui:Destroy()
+    end
+
+    local WatermarkGui = Instance.new("ScreenGui")
+    WatermarkGui.Name = "DaviWatermarkGui"
+    WatermarkGui.ResetOnSpawn = false
+    WatermarkGui.Parent = targetParent
+
+    local WatermarkLabel = Instance.new("TextLabel")
+    WatermarkLabel.Name = "WatermarkLabel"
+    WatermarkLabel.Size = UDim2.new(0, 300, 0, 30)
+    WatermarkLabel.Position = UDim2.new(0.5, -150, 0, 10) -- Centered at the top of the screen
+    WatermarkLabel.BackgroundTransparency = 1 -- Completely transparent background
+    WatermarkLabel.Text = "SCRIPT MAKE BY DAVI"
+    WatermarkLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    WatermarkLabel.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+    WatermarkLabel.TextStrokeTransparency = 0 -- Black outline to keep text readable
+    WatermarkLabel.Font = Enum.Font.GothamBold
+    WatermarkLabel.TextSize = 16
+    WatermarkLabel.Parent = WatermarkGui
+end)
