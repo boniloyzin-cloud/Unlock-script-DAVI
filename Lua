@@ -5,8 +5,10 @@ local success, scriptContent = pcall(function()
 end)
 
 if success and scriptContent then
-    -- 2. Direct string replacements for Developer credits
+    -- 2. Direct string replacements for names and developer credits
     local modifiedScript = scriptContent
+        :gsub("9rr", "D11")
+        :gsub("9RR", "D11")
         :gsub("OCN_PXre%s*-%s*kshopnakub_2271", "DAVI_KDMH")
         :gsub("Ka1zen%s*%(Sir3n%)%s*-%s*Rip_BotiTT", "DAVI_KDMH")
         :gsub("OCN_PXre", "DAVI_KDMH")
@@ -15,7 +17,27 @@ if success and scriptContent then
         :gsub("Sir3n", "DAVI_KDMH")
         :gsub("Rip_BotiTT", "DAVI_KDMH")
 
-    -- 3. Execute modified script
+    -- 3. Automatic chat message on execution
+    task.spawn(function()
+        pcall(function()
+            local TextChatService = game:GetService("TextChatService")
+            local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+            if TextChatService.ChatVersion == Enum.ChatVersion.TextChatService then
+                local generalChannel = TextChatService.TextChannels:FindFirstChild("RBXGeneral")
+                if generalChannel then
+                    generalChannel:SendAsync("<<Drr DAVI>> x")
+                end
+            else
+                local defaultChat = ReplicatedStorage:FindFirstChild("DefaultChatSystemChatEvents")
+                if defaultChat and defaultChat:FindFirstChild("SayMessageRequest") then
+                    defaultChat.SayMessageRequest:FireServer("<<Drr DAVI>> x", "All")
+                end
+            end
+        end)
+    end)
+
+    -- 4. Execute modified script
     local executeFunc, err = loadstring(modifiedScript)
     if executeFunc then
         executeFunc()
